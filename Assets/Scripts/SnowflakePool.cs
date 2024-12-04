@@ -8,7 +8,8 @@ public class SnowflakePool : Singleton<SnowflakePool>
     Queue<GameObject> snowflakePool = new Queue<GameObject>();
     [SerializeField] int poolSize = 5;
 
-    public SnowflakePool()
+
+    public override void Awake()
     {
         snowflake = LoadPrefab("Prefabs/Snowflake");
     }
@@ -29,11 +30,18 @@ public class SnowflakePool : Singleton<SnowflakePool>
     {
         for (int i = 0; i < poolSize; i++)
         {
-            Object.Instantiate(snowflake);
+            CreateSnowflake();
             snowflake.SetActive(false);
 
             snowflakePool.Enqueue(snowflake);
         }
+    }
+    
+    public GameObject CreateSnowflake()
+    {
+        return snowflake != null ? Object.Instantiate(snowflake) : null;
+        //Debug.LogError("Snowflake prefab not found");
+        //return null;
     }
 
     public GameObject GetSnowflake()
@@ -52,15 +60,12 @@ public class SnowflakePool : Singleton<SnowflakePool>
         }
     }
 
-    public void ReturnSnowflake(List<GameObject> snowflakes)
+    public void ReturnSnowflake()
     {
         Queue<GameObject> currentPool = GetSnowflakePool();
 
-        foreach (GameObject snowflake in snowflakes)
-        {
-            snowflake.SetActive(false);
-            currentPool.Enqueue(snowflake);
-        }
+        snowflake.SetActive(false);
+        currentPool.Enqueue(snowflake);
     }
 
     Queue<GameObject> GetSnowflakePool()

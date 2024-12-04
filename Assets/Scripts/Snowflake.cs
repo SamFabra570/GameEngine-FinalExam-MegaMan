@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Snowflake : MonoBehaviour
 {
@@ -14,7 +15,13 @@ public class Snowflake : MonoBehaviour
     void Update()
     {
         transform.position = Vector2.MoveTowards(transform.position, target.transform.position,
-            Time.deltaTime * 5f);
+            Time.deltaTime * 2.5f);
+
+        if (transform.position.y < target.transform.position.y)
+        {
+            Debug.Log("fuck outta here");
+            SnowflakePool.Instance.ReturnSnowflake();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
